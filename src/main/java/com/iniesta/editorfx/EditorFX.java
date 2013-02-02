@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import com.iniesta.editorfx.editor.Editor;
 import com.iniesta.layerfx.FXMLHandler;
+import com.iniesta.layerfx.HandlingView;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -42,7 +43,7 @@ public class EditorFX extends Application {
 	protected static void start() throws IOException {
 		long t1 = (new java.util.Date()).getTime();
 		FXMLHandler handler = new FXMLHandler(Editor.class);
-		handler.getHandlingView();
+		handler.getHandlingView();		
 		handler.setStageStyle(StageStyle.DECORATED);
 		handler.showWindow("Editor FX");
 		long time = (new java.util.Date()).getTime() - t1;

@@ -3,6 +3,7 @@
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.input.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.shape.*?>
@@ -15,7 +16,7 @@
           <items>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
               <children>
-                <TreeView prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                <TreeView fx:id="treeViewFolder" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
               </children>
             </AnchorPane>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
@@ -29,7 +30,13 @@
           <menus>
             <Menu mnemonicParsing="false" text="File">
               <items>
-                <MenuItem mnemonicParsing="false" text="Close" />
+                <MenuItem mnemonicParsing="false" onAction="#handleMenuItemLoadFileAction" text="Load File..." />
+                <MenuItem mnemonicParsing="false" onAction="#handleMenuLoadFolderAction" text="Load Folder...">
+                  <accelerator>
+                    <KeyCodeCombination alt="UP" code="F" control="ANY" meta="UP" shift="UP" shortcut="UP" />
+                  </accelerator>
+                </MenuItem>
+                <MenuItem mnemonicParsing="false" onAction="#handleMenuItemExitAction" text="Exit" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Edit">
@@ -50,7 +57,7 @@
               <items>
                 <Circle fill="DODGERBLUE" radius="5.0" stroke="BLACK" strokeType="INSIDE" />
                 <Label text="Label" />
-                <ProgressBar prefWidth="200.0" progress="-1.0" />
+                <ProgressBar fx:id="progressBar" prefWidth="200.0" progress="-1.0" />
               </items>
             </ToolBar>
           </children>

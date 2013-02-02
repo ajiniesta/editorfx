@@ -16,16 +16,21 @@
  */
 package com.iniesta.editorfx.editor;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import com.iniesta.layerfx.HandlingView;
-
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
+import com.iniesta.editorfx.editor.files.HelperEditorFiles;
+import com.iniesta.layerfx.HandlingView;
 
 /**
  * @author antonio
@@ -33,21 +38,47 @@ import javafx.stage.Stage;
  */
 public class Editor implements Initializable, HandlingView{
 
+	private Stage stage;
+	
 	@FXML
 	private AnchorPane mainPane;
+	@FXML
+	private TreeView<File> treeViewFolder;
+	@FXML
+	private ProgressBar progressBar;
 	
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		// TODO Auto-generated method stub
-		
+	public void initialize(URL arg0, ResourceBundle arg1) {		
+		progressBar.setVisible(false);
 	}
 
 	public void setStage(Stage stage) {
-		// TODO Auto-generated method stub
-		
+		this.stage = stage;
 	}
 
 	public Pane getMainPane() {		
 		return mainPane;
 	}
-
+	
+	@FXML
+	void handleMenuItemExitAction(ActionEvent event){
+		System.exit(0);
+	}
+	
+	@FXML
+	void handleMenuLoadFolderAction(ActionEvent event){		
+		File f = HelperEditorFiles.getFolder(stage);		
+		ServiceFolderLoading service = new ServiceFolderLoading(f);
+		progressBar.visibleProperty().bind(service.runningProperty());		
+		treeViewFolder.rootProperty().bind(service.valueProperty());
+		service.start();
+	}
+	
+	@FXML
+	void handleMenuItemLoadFileAction(ActionEvent event){
+		File f = HelperEditorFiles.getFile(stage);		
+		ServiceFolderLoading service = new ServiceFolderLoading(f);
+		progressBar.visibleProperty().bind(service.runningProperty());		
+		treeViewFolder.rootProperty().bind(service.valueProperty());
+		service.start();
+	}
 }
