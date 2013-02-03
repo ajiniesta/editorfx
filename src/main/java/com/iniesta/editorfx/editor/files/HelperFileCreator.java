@@ -18,6 +18,9 @@ package com.iniesta.editorfx.editor.files;
 
 import java.io.File;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -29,11 +32,10 @@ import javafx.scene.control.TextArea;
  */
 public class HelperFileCreator {
 
-	public static void createNewFile(TabPane paneFiles, ProgressIndicator progress, File selectedFile) {
-		System.out.println("Selected file: " + selectedFile);
+	public static void createNewFile(TabPane paneFiles, ProgressIndicator progress, File selectedFile) {		
 		if(paneFiles!=null && selectedFile!=null){
 			Tab tab = new Tab(selectedFile.getName());
-			TextArea tarea = new TextArea();
+			final TextArea tarea = new TextArea();
 			tab.setContent(tarea);
 			paneFiles.getTabs().add(tab);
 			
@@ -41,6 +43,19 @@ public class HelperFileCreator {
 			ServiceFileText service = new ServiceFileText(selectedFile);
 			progress.visibleProperty().bind(service.runningProperty());
 			tarea.textProperty().bind(service.valueProperty());
+			if(selectedFile.canWrite()){
+				SimpleBooleanProperty finish = new SimpleBooleanProperty(true);
+				finish.bind(service.runningProperty());
+				finish.addListener(new ChangeListener<Boolean>() {
+					public void changed(ObservableValue<? extends Boolean> arg0,
+							Boolean oldValue, Boolean newValue) {
+						if(!newValue){
+							System.out.println("Load Finished!");
+							tarea.textProperty().unbind();
+						}
+					}
+				});
+			}
 			service.start();
 		}
 	}
