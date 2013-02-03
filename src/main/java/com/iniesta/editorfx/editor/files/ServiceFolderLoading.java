@@ -14,7 +14,7 @@
  * 
  * File created: 02/02/2013 at 22:15:11 by antonio
  */
-package com.iniesta.editorfx.editor;
+package com.iniesta.editorfx.editor.files;
 
 import java.io.File;
 

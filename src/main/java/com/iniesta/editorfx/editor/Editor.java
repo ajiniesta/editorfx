@@ -23,7 +23,8 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -35,6 +36,8 @@ import javafx.util.Callback;
 
 import com.iniesta.editorfx.editor.files.EditorFileCell;
 import com.iniesta.editorfx.editor.files.HelperEditorFiles;
+import com.iniesta.editorfx.editor.files.HelperFileCreator;
+import com.iniesta.editorfx.editor.files.ServiceFolderLoading;
 import com.iniesta.layerfx.HandlingView;
 
 /**
@@ -50,10 +53,12 @@ public class Editor implements Initializable, HandlingView{
 	@FXML
 	private TreeView<File> treeViewFolder;
 	@FXML
-	private ProgressBar progressBar;
+	private ProgressIndicator progressIndicator;
+	@FXML
+	private TabPane paneFiles;
 	
 	public void initialize(URL arg0, ResourceBundle arg1) {		
-		progressBar.setVisible(false);
+		progressIndicator.setVisible(false);
 		treeViewFolder.setCellFactory(new Callback<TreeView<File>, TreeCell<File>>() {			
 			public TreeCell<File> call(TreeView<File> arg0) {
 				return new EditorFileCell();
@@ -78,7 +83,7 @@ public class Editor implements Initializable, HandlingView{
 	void handleMenuLoadFolderAction(ActionEvent event){		
 		File f = HelperEditorFiles.getFolder(stage);		
 		ServiceFolderLoading service = new ServiceFolderLoading(f);
-		progressBar.visibleProperty().bind(service.runningProperty());		
+		progressIndicator.visibleProperty().bind(service.runningProperty());		
 		treeViewFolder.rootProperty().bind(service.valueProperty());
 		service.start();
 	}
@@ -87,7 +92,7 @@ public class Editor implements Initializable, HandlingView{
 	void handleMenuItemLoadFileAction(ActionEvent event){
 		File f = HelperEditorFiles.getFile(stage);		
 		ServiceFolderLoading service = new ServiceFolderLoading(f);
-		progressBar.visibleProperty().bind(service.runningProperty());		
+		progressIndicator.visibleProperty().bind(service.runningProperty());		
 		treeViewFolder.rootProperty().bind(service.valueProperty());
 		service.start();
 	}
@@ -96,8 +101,8 @@ public class Editor implements Initializable, HandlingView{
 	void handleTreeMouseClicked(MouseEvent event){
 		TreeItem<File> selectedItem = treeViewFolder.getSelectionModel().getSelectedItem();		
 		if(event.getClickCount()==2 && selectedItem!=null && selectedItem.isLeaf()){			
-			File selectedFile = selectedItem.getValue();
-			System.out.println("Selected file: " + selectedFile);
+			File selectedFile = selectedItem.getValue();			
+			HelperFileCreator.createNewFile(paneFiles, progressIndicator, selectedFile);
 		}
 	}
 }
