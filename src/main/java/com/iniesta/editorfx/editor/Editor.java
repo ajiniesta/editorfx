@@ -24,11 +24,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TreeCell;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
+import com.iniesta.editorfx.editor.files.EditorFileCell;
 import com.iniesta.editorfx.editor.files.HelperEditorFiles;
 import com.iniesta.layerfx.HandlingView;
 
@@ -49,6 +54,11 @@ public class Editor implements Initializable, HandlingView{
 	
 	public void initialize(URL arg0, ResourceBundle arg1) {		
 		progressBar.setVisible(false);
+		treeViewFolder.setCellFactory(new Callback<TreeView<File>, TreeCell<File>>() {			
+			public TreeCell<File> call(TreeView<File> arg0) {
+				return new EditorFileCell();
+			}
+		});
 	}
 
 	public void setStage(Stage stage) {
@@ -80,5 +90,14 @@ public class Editor implements Initializable, HandlingView{
 		progressBar.visibleProperty().bind(service.runningProperty());		
 		treeViewFolder.rootProperty().bind(service.valueProperty());
 		service.start();
+	}
+	
+	@FXML
+	void handleTreeMouseClicked(MouseEvent event){
+		TreeItem<File> selectedItem = treeViewFolder.getSelectionModel().getSelectedItem();		
+		if(event.getClickCount()==2 && selectedItem!=null && selectedItem.isLeaf()){			
+			File selectedFile = selectedItem.getValue();
+			System.out.println("Selected file: " + selectedFile);
+		}
 	}
 }
