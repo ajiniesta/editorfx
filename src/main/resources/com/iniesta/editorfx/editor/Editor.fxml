@@ -31,12 +31,17 @@
             <Menu mnemonicParsing="false" text="File">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#handleMenuItemNewAction" text="New" />
+                <SeparatorMenuItem mnemonicParsing="false" />
                 <MenuItem mnemonicParsing="false" onAction="#handleMenuItemLoadFileAction" text="Load File..." />
                 <MenuItem mnemonicParsing="false" onAction="#handleMenuLoadFolderAction" text="Load Folder...">
                   <accelerator>
                     <KeyCodeCombination alt="UP" code="F" control="ANY" meta="UP" shift="UP" shortcut="UP" />
                   </accelerator>
                 </MenuItem>
+                <SeparatorMenuItem mnemonicParsing="false" />
+                <MenuItem mnemonicParsing="false" onAction="#handleMenuItemSaveAction" text="Save" />
+                <MenuItem mnemonicParsing="false" onAction="#handleMenuItemSaveAsAction" text="Save As..." />
+                <SeparatorMenuItem mnemonicParsing="false" />
                 <MenuItem mnemonicParsing="false" onAction="#handleMenuItemExitAction" text="Exit" />
               </items>
             </Menu>

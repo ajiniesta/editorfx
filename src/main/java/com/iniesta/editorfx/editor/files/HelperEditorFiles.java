@@ -52,5 +52,13 @@ public class HelperEditorFiles {
 		folder = dc.showDialog(stage);
 		return folder;
 	}
+
+	public static File getSaveFile() {
+		File file = null;
+		FileChooser fc = new FileChooser();
+		fc.setTitle("Save File");
+		file = fc.showSaveDialog(null);
+		return file;
+	}
 	
 }

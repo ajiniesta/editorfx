@@ -56,6 +56,8 @@ public class Editor implements Initializable, HandlingView{
 	private ProgressIndicator progressIndicator;
 	@FXML
 	private TabPane paneFiles;
+
+	private HelperFileCreator helperFileCreator;
 	
 	public void initialize(URL arg0, ResourceBundle arg1) {		
 		progressIndicator.setVisible(false);
@@ -64,6 +66,7 @@ public class Editor implements Initializable, HandlingView{
 				return new EditorFileCell();
 			}
 		});
+		this.helperFileCreator = HelperFileCreator.getInstance(paneFiles, progressIndicator);
 	}
 
 	public void setStage(Stage stage) {
@@ -92,7 +95,7 @@ public class Editor implements Initializable, HandlingView{
 	void handleMenuItemLoadFileAction(ActionEvent event){
 		File f = HelperEditorFiles.getFile(stage);
 		if(f!=null){
-			HelperFileCreator.openFile(paneFiles, progressIndicator, f);
+			helperFileCreator.openFile(f);
 		}		
 	}
 	
@@ -101,12 +104,22 @@ public class Editor implements Initializable, HandlingView{
 		TreeItem<File> selectedItem = treeViewFolder.getSelectionModel().getSelectedItem();		
 		if(event.getClickCount()==2 && selectedItem!=null && selectedItem.isLeaf()){			
 			File selectedFile = selectedItem.getValue();			
-			HelperFileCreator.openFile(paneFiles, progressIndicator, selectedFile);
+			helperFileCreator.openFile(selectedFile);
 		}
 	}
 	
 	@FXML
 	void handleMenuItemNewAction(ActionEvent event){
-		HelperFileCreator.createNewFile(paneFiles, progressIndicator);
+		helperFileCreator.createNewFile();
+	}
+	
+	@FXML
+	void handleMenuItemSaveAction(ActionEvent event){
+		helperFileCreator.saveFile();
+	}
+	
+	@FXML
+	void handleMenuItemSaveAsAction(ActionEvent event){
+		helperFileCreator.saveAsFile();
 	}
 }

@@ -18,13 +18,12 @@ package com.iniesta.editorfx;
 
 import java.io.IOException;
 
-import com.iniesta.editorfx.editor.Editor;
-import com.iniesta.layerfx.FXMLHandler;
-import com.iniesta.layerfx.HandlingView;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import com.iniesta.editorfx.editor.Editor;
+import com.iniesta.layerfx.FXMLHandler;
 
 /**
  * @author antonio
