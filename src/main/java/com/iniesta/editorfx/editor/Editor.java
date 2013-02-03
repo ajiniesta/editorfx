@@ -90,11 +90,10 @@ public class Editor implements Initializable, HandlingView{
 	
 	@FXML
 	void handleMenuItemLoadFileAction(ActionEvent event){
-		File f = HelperEditorFiles.getFile(stage);		
-		ServiceFolderLoading service = new ServiceFolderLoading(f);
-		progressIndicator.visibleProperty().bind(service.runningProperty());		
-		treeViewFolder.rootProperty().bind(service.valueProperty());
-		service.start();
+		File f = HelperEditorFiles.getFile(stage);
+		if(f!=null){
+			HelperFileCreator.openFile(paneFiles, progressIndicator, f);
+		}		
 	}
 	
 	@FXML
@@ -102,7 +101,12 @@ public class Editor implements Initializable, HandlingView{
 		TreeItem<File> selectedItem = treeViewFolder.getSelectionModel().getSelectedItem();		
 		if(event.getClickCount()==2 && selectedItem!=null && selectedItem.isLeaf()){			
 			File selectedFile = selectedItem.getValue();			
-			HelperFileCreator.createNewFile(paneFiles, progressIndicator, selectedFile);
+			HelperFileCreator.openFile(paneFiles, progressIndicator, selectedFile);
 		}
+	}
+	
+	@FXML
+	void handleMenuItemNewAction(ActionEvent event){
+		HelperFileCreator.createNewFile(paneFiles, progressIndicator);
 	}
 }

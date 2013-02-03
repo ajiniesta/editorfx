@@ -32,7 +32,15 @@ import javafx.scene.control.TextArea;
  */
 public class HelperFileCreator {
 
-	public static void createNewFile(TabPane paneFiles, ProgressIndicator progress, File selectedFile) {		
+	private static int counter = 1;
+
+	/**
+	 * Open a tab witht he file specified
+	 * @param paneFiles
+	 * @param progress
+	 * @param selectedFile
+	 */
+	public static void openFile(TabPane paneFiles, ProgressIndicator progress, File selectedFile) {		
 		if(paneFiles!=null && selectedFile!=null){
 			Tab tab = new Tab(selectedFile.getName());
 			final TextArea tarea = new TextArea();
@@ -49,8 +57,7 @@ public class HelperFileCreator {
 				finish.addListener(new ChangeListener<Boolean>() {
 					public void changed(ObservableValue<? extends Boolean> arg0,
 							Boolean oldValue, Boolean newValue) {
-						if(!newValue){
-							System.out.println("Load Finished!");
+						if(!newValue){							
 							tarea.textProperty().unbind();
 						}
 					}
@@ -58,6 +65,15 @@ public class HelperFileCreator {
 			}
 			service.start();
 		}
+	}
+
+	public static void createNewFile(TabPane paneFiles,	ProgressIndicator progressIndicator) {
+		if(paneFiles!=null){
+			Tab tab = new Tab("New "+counter ++);
+			final TextArea tarea = new TextArea();
+			tab.setContent(tarea);
+			paneFiles.getTabs().add(tab);
+		}		
 	}
 
 }

@@ -30,6 +30,7 @@
           <menus>
             <Menu mnemonicParsing="false" text="File">
               <items>
+                <MenuItem mnemonicParsing="false" onAction="#handleMenuItemNewAction" text="New" />
                 <MenuItem mnemonicParsing="false" onAction="#handleMenuItemLoadFileAction" text="Load File..." />
                 <MenuItem mnemonicParsing="false" onAction="#handleMenuLoadFolderAction" text="Load Folder...">
                   <accelerator>
@@ -55,7 +56,7 @@
           <children>
             <ToolBar AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <items>
-                <ProgressIndicator fx:id="progressIndicator" prefHeight="20.0" prefWidth="20.0" progress="-1.0" />
+                <ProgressIndicator fx:id="progressIndicator" maxHeight="15.0" maxWidth="15.0" minHeight="15.0" minWidth="15.0" prefHeight="15.0" prefWidth="15.0" progress="-1.0" />
                 <Circle fill="DODGERBLUE" radius="5.0" stroke="BLACK" strokeType="INSIDE" />
                 <Label text="Label" />
               </items>
