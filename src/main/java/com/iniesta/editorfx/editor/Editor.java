@@ -122,4 +122,9 @@ public class Editor implements Initializable, HandlingView{
 	void handleMenuItemSaveAsAction(ActionEvent event){
 		helperFileCreator.saveAsFile();
 	}
+	
+	@FXML
+	void handleMenuItemCloseAction(ActionEvent event){
+		helperFileCreator.closeCurrent();
+	}
 }

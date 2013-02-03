@@ -18,7 +18,9 @@ package com.iniesta.editorfx.editor.files;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -67,13 +69,20 @@ public class HelperFileCreator {
 	 */
 	public void openFile(File selectedFile) {		
 		if(paneFiles!=null && selectedFile!=null){
-			//Create the tab and the container
-			Tab tab = new Tab(selectedFile.getName());
+			Tab previousTab = getPreviousTab(selectedFile), tab;
 			final TextArea tarea = new TextArea();
+			if(previousTab==null){
+				//Create the tab and the container
+				tab = new Tab(selectedFile.getName());
+				paneFiles.getTabs().add(tab);
+				//Add it to the map of files
+				files.put(tab, selectedFile);
+			}else{
+				tab = previousTab;
+			}			
 			tab.setContent(tarea);
-			paneFiles.getTabs().add(tab);
-			//Add it to the map of files
-			files.put(tab, selectedFile);
+			paneFiles.getSelectionModel().select(tab);
+
 			//Call the service to fill the text
 			ServiceFileText service = new ServiceFileText(selectedFile);
 			progressIndicator.visibleProperty().bind(service.runningProperty());
@@ -95,6 +104,27 @@ public class HelperFileCreator {
 	}
 
 	/**
+	 * Look for a tab which have in the content the selected file
+	 * @param paneFiles2
+	 * @param selectedFile
+	 * @return
+	 */
+	private Tab getPreviousTab(File selectedFile) {
+		Tab tab = null;
+		if(selectedFile!=null && paneFiles!=null && files!=null){
+			Set<Tab> keys = files.keySet();
+			for (Iterator<Tab> iterator = keys.iterator(); tab==null && iterator.hasNext();) {
+				Tab key = iterator.next();
+				File file = files.get(key);
+				if(selectedFile.equals(file)){
+					tab = key;
+				}
+			}
+		}
+		return tab;
+	}
+
+	/**
 	 * Creating a new file with an empty content
 	 */
 	public void createNewFile() {
@@ -104,6 +134,7 @@ public class HelperFileCreator {
 			final TextArea tarea = new TextArea();
 			tab.setContent(tarea);
 			paneFiles.getTabs().add(tab);
+			paneFiles.getSelectionModel().select(tab);
 		}		
 	}
 
@@ -183,6 +214,14 @@ public class HelperFileCreator {
 			selectedFile = files.get(tab);
 		}
 		return selectedFile;
+	}
+
+	public void closeCurrent() {
+		Tab tab = paneFiles.getSelectionModel().getSelectedItem();
+		if(tab!=null){
+			files.remove(tab);
+			paneFiles.getTabs().remove(tab);
+		}
 	}
 
 }
