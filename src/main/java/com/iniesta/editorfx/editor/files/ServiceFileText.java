@@ -31,6 +31,7 @@ import javafx.concurrent.Task;
  */
 public class ServiceFileText extends Service<String> {
 
+	protected static final String KEY_LINE_SEPARATOR = "line.separator";
 	private File file;
 
 	public ServiceFileText(File file){
@@ -54,7 +55,7 @@ public class ServiceFileText extends Service<String> {
 					if(fis!=null && br!=null){
 						String line = null;
 						while((line = br.readLine())!=null){
-							fileText += line;
+							fileText += line + System.getProperty(KEY_LINE_SEPARATOR);
 						}
 					}
 				} catch(Exception ex){
