@@ -36,8 +36,8 @@ import javafx.util.Callback;
 
 import com.iniesta.editorfx.editor.files.EditorFileCell;
 import com.iniesta.editorfx.editor.files.HelperEditorFiles;
-import com.iniesta.editorfx.editor.files.HelperFileCreator;
 import com.iniesta.editorfx.editor.files.ServiceFolderLoading;
+import com.iniesta.editorfx.editor.files.TabFiles;
 import com.iniesta.layerfx.HandlingView;
 
 /**
@@ -57,7 +57,7 @@ public class Editor implements Initializable, HandlingView{
 	@FXML
 	private TabPane paneFiles;
 
-	private HelperFileCreator helperFileCreator;
+	private TabFiles helperFileCreator;
 	
 	public void initialize(URL arg0, ResourceBundle arg1) {		
 		progressIndicator.setVisible(false);
@@ -66,7 +66,8 @@ public class Editor implements Initializable, HandlingView{
 				return new EditorFileCell();
 			}
 		});
-		this.helperFileCreator = HelperFileCreator.getInstance(paneFiles, progressIndicator);
+		this.helperFileCreator = TabFiles.getInstance(paneFiles, progressIndicator);
+		
 	}
 
 	public void setStage(Stage stage) {

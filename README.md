@@ -11,6 +11,8 @@ But it does pretty well. It just get born as a test project, so if works... it's
 
 Needs JavaFX 2.Test it in jdk1.7.0_09
 
+Refactorization....
+
 Copyright [2013] Antonio J. Iniesta
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
