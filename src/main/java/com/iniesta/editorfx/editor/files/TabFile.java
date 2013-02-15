@@ -21,9 +21,14 @@ import java.io.File;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.ProgressIndicator;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
 
+import com.iniesta.editorfx.editor.UpdateNotification;
+import com.iniesta.editorfx.editor.files.business.HelperEditorFiles;
+import com.iniesta.editorfx.editor.files.business.ServiceFileSave;
+import com.iniesta.editorfx.editor.files.business.ServiceFileText;
 import com.iniesta.editorfx.editor.files.container.Container;
 import com.iniesta.editorfx.editor.files.container.TextAreaContainer;
 
@@ -33,33 +38,42 @@ import com.iniesta.editorfx.editor.files.container.TextAreaContainer;
  */
 public class TabFile {
 	
+	public enum FILE_SUPPORTED_TYPE {PLAIN_TEXT, FORMAT_TEXT, CSV}
+	
 	private boolean newFile;
 	private File file;
 	private String tabName;
 	private Tab tab;
 	private Container container;
-	private ProgressIndicator progressIndicator;
+	private UpdateNotification updateNotification;
 	private ChangeNameListener changeTabName;
 
-	public TabFile(File file, ProgressIndicator progressIndicator) {
+	public TabFile(File file, UpdateNotification updateNotification) {
+		this.newFile = false;
+		this.file = file;
+		initialize(file.getName(), updateNotification);
+	}
+	
+	public TabFile(String tabName, UpdateNotification updateNotification) {
+		this.newFile = true;
+		initialize(tabName, updateNotification);
+	}
+	
+	
+	
+	private void initialize(String tabName,	UpdateNotification updateNotification) {
 		this.tabName = file.getName();
 		this.tab = new Tab(tabName);		
 		this.container = new TextAreaContainer();
-		this.tab.setContent(container.getNode());
-		this.progressIndicator = progressIndicator;
-		this.newFile = false;
-		this.file = file;
+		this.tab.setContent(container.getNode());		
+		this.updateNotification = updateNotification;
+		tab.setOnSelectionChanged(new EventHandler<Event>() {			
+			public void handle(Event arg0) {
+				updateNotificationStatus();
+			}
+		});
 	}
-	
-	public TabFile(String tabName, ProgressIndicator progressIndicator) {
-		this.tabName = tabName;
-		this.newFile = true;
-		this.tab = new Tab(tabName);
-		this.container = new TextAreaContainer();
-		this.tab.setContent(container.getNode());
-		this.progressIndicator = progressIndicator;
-	}
-	
+
 	/**
 	 * @return the file
 	 */
@@ -75,26 +89,6 @@ public class TabFile {
 	public void setFile(File file) {
 		this.file = file;
 	}
-
-
-
-	/**
-	 * @return the progressIndicator
-	 */
-	public ProgressIndicator getProgressIndicator() {
-		return progressIndicator;
-	}
-
-
-
-	/**
-	 * @param progressIndicator the progressIndicator to set
-	 */
-	public void setProgressIndicator(ProgressIndicator progressIndicator) {
-		this.progressIndicator = progressIndicator;
-	}
-
-
 
 	/**
 	 * @return the newFile
@@ -152,31 +146,10 @@ public class TabFile {
 		this.container = container;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((container == null) ? 0 : container.hashCode());
-		result = prime * result + ((file == null) ? 0 : file.hashCode());
-		result = prime * result
-				+ ((tabName == null) ? 0 : tabName.hashCode());
-		result = prime * result + (newFile ? 1231 : 1237);
-		result = prime
-				* result
-				+ ((progressIndicator == null) ? 0 : progressIndicator
-						.hashCode());
-		result = prime * result + ((tab == null) ? 0 : tab.hashCode());
-		return result;
-	}
-
 	public void openFile() {
 		//Call the service to fill the text
 		ServiceFileText service = new ServiceFileText(file);
-		progressIndicator.visibleProperty().bind(service.runningProperty());
+		updateNotification.getProgressIndicator().visibleProperty().bind(service.runningProperty());
 		container.textProperty().bind(service.valueProperty());
 		if(file.canWrite()){
 			SimpleBooleanProperty finish = new SimpleBooleanProperty(true);
@@ -190,61 +163,32 @@ public class TabFile {
 				}
 			});
 		}
+		updateNotificationStatus();
 		service.start();		
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
+	/**
+	 * 
 	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (!(obj instanceof TabFile))
-			return false;
-		TabFile other = (TabFile) obj;
-		if (container == null) {
-			if (other.container != null)
-				return false;
-		} else if (!container.equals(other.container))
-			return false;
-		if (file == null) {
-			if (other.file != null)
-				return false;
-		} else if (!file.equals(other.file))
-			return false;
-		if (tabName == null) {
-			if (other.tabName != null)
-				return false;
-		} else if (!tabName.equals(other.tabName))
-			return false;
-		if (newFile != other.newFile)
-			return false;
-		if (progressIndicator == null) {
-			if (other.progressIndicator != null)
-				return false;
-		} else if (!progressIndicator.equals(other.progressIndicator))
-			return false;
-		if (tab == null) {
-			if (other.tab != null)
-				return false;
-		} else if (!tab.equals(other.tab))
-			return false;
-		return true;
+	private void updateNotificationStatus() {
+		if(container.isChanged()){
+			updateNotification.getLabelStatus().setVisible(true);
+			updateNotification.getLabelStatus().setText("Modified");
+		}else{
+			updateNotification.getLabelStatus().setVisible(false);
+			updateNotification.getLabelStatus().setText("");
+		}
+		container.changedProperty().addListener(new ChangeListener<Boolean>() {
+			public void changed(ObservableValue<? extends Boolean> v,
+					Boolean oldValue, Boolean newValue) {				
+				if(newValue){
+					updateNotification.getLabelStatus().setVisible(true);
+					updateNotification.getLabelStatus().setText("Modified");
+				}
+			}
+		});
 	}
-
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "TabFile [newFile=" + newFile + ", file=" + file + ", fileName="
-				+ tabName + ", tab=" + tab + ", container=" + container
-				+ ", progressIndicator=" + progressIndicator + "]";
-	}
-
+	
 	public void saveFile() {
 		if(file==null){
 			saveAsFile();
@@ -268,7 +212,7 @@ public class TabFile {
 	private void saveFile(final File file) {
 		if(file!=null){
 			final ServiceFileSave service = new ServiceFileSave(file, getContentTabSelected());
-			progressIndicator.visibleProperty().bind(service.runningProperty());
+			updateNotification.getProgressIndicator().visibleProperty().bind(service.runningProperty());
 			service.start();
 			SimpleBooleanProperty finish = new SimpleBooleanProperty(true);
 			finish.bind(service.runningProperty());
@@ -316,5 +260,85 @@ public class TabFile {
 
 	public void setOnChangeTabName(ChangeNameListener changeTabNameListener) {
 		this.changeTabName = changeTabNameListener;		
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((changeTabName == null) ? 0 : changeTabName.hashCode());
+		result = prime * result
+				+ ((container == null) ? 0 : container.hashCode());
+		result = prime * result + ((file == null) ? 0 : file.hashCode());
+		result = prime * result + (newFile ? 1231 : 1237);
+		result = prime * result + ((tab == null) ? 0 : tab.hashCode());
+		result = prime * result + ((tabName == null) ? 0 : tabName.hashCode());
+		result = prime
+				* result
+				+ ((updateNotification == null) ? 0 : updateNotification
+						.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof TabFile))
+			return false;
+		TabFile other = (TabFile) obj;
+		if (changeTabName == null) {
+			if (other.changeTabName != null)
+				return false;
+		} else if (!changeTabName.equals(other.changeTabName))
+			return false;
+		if (container == null) {
+			if (other.container != null)
+				return false;
+		} else if (!container.equals(other.container))
+			return false;
+		if (file == null) {
+			if (other.file != null)
+				return false;
+		} else if (!file.equals(other.file))
+			return false;
+		if (newFile != other.newFile)
+			return false;
+		if (tab == null) {
+			if (other.tab != null)
+				return false;
+		} else if (!tab.equals(other.tab))
+			return false;
+		if (tabName == null) {
+			if (other.tabName != null)
+				return false;
+		} else if (!tabName.equals(other.tabName))
+			return false;
+		if (updateNotification == null) {
+			if (other.updateNotification != null)
+				return false;
+		} else if (!updateNotification.equals(other.updateNotification))
+			return false;
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "TabFile [newFile=" + newFile + ", file=" + file + ", tabName="
+				+ tabName + ", tab=" + tab + ", container=" + container
+				+ ", updateNotification=" + updateNotification
+				+ ", changeTabName=" + changeTabName + "]";
 	}
 }

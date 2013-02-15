@@ -22,9 +22,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+
+import com.iniesta.editorfx.editor.UpdateNotification;
 
 /**
  * @author antonio
@@ -38,16 +39,16 @@ public class TabFiles {
 
 	private TabPane paneFiles;
 
-	private ProgressIndicator progressIndicator;
+	private UpdateNotification updateNotification;
 	
 	private Map<Tab, TabFile> files;
 	
 	private ChangeNameListener changeTabNameListener;
 	
-	private TabFiles(TabPane tabPaneFiles, ProgressIndicator progressIndicator){
+	private TabFiles(TabPane tabPaneFiles, UpdateNotification updateNotification){
 		super();
 		this.paneFiles = tabPaneFiles;
-		this.progressIndicator = progressIndicator;
+		this.updateNotification = updateNotification;
 		files = new HashMap<Tab, TabFile>();
 		
 //		imageResourceClose = new Image("/com/iniesta/editorfx/images/close.png");
@@ -64,9 +65,9 @@ public class TabFiles {
 		};
 	}
 	
-	public static TabFiles getInstance(TabPane paneFiles, ProgressIndicator progressIndicator){
+	public static TabFiles getInstance(TabPane paneFiles, UpdateNotification updateNotification){
 		if(instance==null){
-			instance = new TabFiles(paneFiles, progressIndicator);
+			instance = new TabFiles(paneFiles, updateNotification);
 		}
 		return instance;
 	}
@@ -83,7 +84,7 @@ public class TabFiles {
 			
 			if(previousTab==null){
 				//Create the tab and the container
-				tab = new TabFile(selectedFile, progressIndicator);
+				tab = new TabFile(selectedFile, updateNotification);
 				tab.setOnChangeTabName(changeTabNameListener);
 				paneFiles.getTabs().add(tab.getTab());
 				//Add it to the map of files
@@ -124,7 +125,7 @@ public class TabFiles {
 		if(paneFiles!=null){
 			//Create an empty tab
 			String tabName = "New "+counter ++;
-			TabFile tabFile = new TabFile(tabName, progressIndicator);	
+			TabFile tabFile = new TabFile(tabName, updateNotification);	
 			tabFile.setOnChangeTabName(changeTabNameListener);
 			paneFiles.getTabs().add(tabFile.getTab());
 			paneFiles.getSelectionModel().select(tabFile.getTab());

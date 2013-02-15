@@ -17,7 +17,10 @@
 package com.iniesta.editorfx.editor.files.container;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.TextArea;
 
@@ -28,9 +31,17 @@ import javafx.scene.control.TextArea;
 public class TextAreaContainer implements Container{
 
 	private TextArea container;
+	private SimpleBooleanProperty changed;
 	
 	public TextAreaContainer(){
 		container = new TextArea();
+		changed = new SimpleBooleanProperty(false);
+		
+		container.setOnKeyPressed(new EventHandler<Event>() {
+			public void handle(Event arg0) {
+				changed.set(true);
+			}
+		});
 	}
 
 	public StringProperty textProperty() {
@@ -38,8 +49,7 @@ public class TextAreaContainer implements Container{
 	}
 
 	public BooleanProperty changedProperty() {
-		// TODO Auto-generated method stub
-		return null;
+		return changed;
 	}
 
 	public String getText() {		
@@ -47,8 +57,11 @@ public class TextAreaContainer implements Container{
 	}
 
 	public boolean isChanged() {
-		// TODO Auto-generated method stub
-		return false;
+		return changed.get();
+	}
+
+	public Node getNode() {
+		return container;
 	}
 
 	/* (non-Javadoc)
@@ -58,6 +71,7 @@ public class TextAreaContainer implements Container{
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((changed == null) ? 0 : changed.hashCode());
 		result = prime * result
 				+ ((container == null) ? 0 : container.hashCode());
 		return result;
@@ -75,6 +89,11 @@ public class TextAreaContainer implements Container{
 		if (!(obj instanceof TextAreaContainer))
 			return false;
 		TextAreaContainer other = (TextAreaContainer) obj;
+		if (changed == null) {
+			if (other.changed != null)
+				return false;
+		} else if (!changed.equals(other.changed))
+			return false;
 		if (container == null) {
 			if (other.container != null)
 				return false;
@@ -88,10 +107,7 @@ public class TextAreaContainer implements Container{
 	 */
 	@Override
 	public String toString() {
-		return "TextAreaContainer [container=" + container + "]";
-	}
-
-	public Node getNode() {
-		return container;
+		return "TextAreaContainer [container=" + container + ", changed="
+				+ changed + "]";
 	}
 }

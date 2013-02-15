@@ -14,7 +14,7 @@
  * 
  * File created: 03/02/2013 at 12:05:31 by antonio
  */
-package com.iniesta.editorfx.editor.files;
+package com.iniesta.editorfx.editor.files.business;
 
 import java.io.BufferedReader;
 import java.io.File;

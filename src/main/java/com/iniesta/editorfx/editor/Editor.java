@@ -23,6 +23,7 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeCell;
@@ -34,10 +35,10 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import com.iniesta.editorfx.editor.files.EditorFileCell;
-import com.iniesta.editorfx.editor.files.HelperEditorFiles;
-import com.iniesta.editorfx.editor.files.ServiceFolderLoading;
 import com.iniesta.editorfx.editor.files.TabFiles;
+import com.iniesta.editorfx.editor.files.business.EditorFileCell;
+import com.iniesta.editorfx.editor.files.business.HelperEditorFiles;
+import com.iniesta.editorfx.editor.files.business.ServiceFolderLoading;
 import com.iniesta.layerfx.HandlingView;
 
 /**
@@ -56,6 +57,8 @@ public class Editor implements Initializable, HandlingView{
 	private ProgressIndicator progressIndicator;
 	@FXML
 	private TabPane paneFiles;
+	@FXML
+	private Label labelStatus;
 
 	private TabFiles helperFileCreator;
 	
@@ -66,7 +69,10 @@ public class Editor implements Initializable, HandlingView{
 				return new EditorFileCell();
 			}
 		});
-		this.helperFileCreator = TabFiles.getInstance(paneFiles, progressIndicator);
+		UpdateNotification updateNotification = new UpdateNotification();
+		updateNotification.setProgressIndicator(progressIndicator);
+		updateNotification.setLabelStatus(labelStatus);
+		this.helperFileCreator = TabFiles.getInstance(paneFiles, updateNotification);
 		
 	}
 
