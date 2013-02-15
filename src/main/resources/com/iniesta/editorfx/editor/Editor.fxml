@@ -30,11 +30,17 @@
           <menus>
             <Menu mnemonicParsing="false" text="File">
               <items>
-                <MenuItem mnemonicParsing="false" onAction="#handleMenuItemNewAction" text="New">
-                  <accelerator>
-                    <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                  </accelerator>
-                </MenuItem>
+                <Menu mnemonicParsing="false" text="New">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#handleMenuItemNewAction" text="Plain Text">
+                      <accelerator>
+                        <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                      </accelerator>
+                    </MenuItem>
+                    <MenuItem mnemonicParsing="false" text="Format Text" />
+                    <MenuItem mnemonicParsing="false" text="CSV" />
+                  </items>
+                </Menu>
                 <SeparatorMenuItem mnemonicParsing="false" />
                 <MenuItem mnemonicParsing="false" onAction="#handleMenuItemLoadFileAction" text="Load File...">
                   <accelerator>
@@ -85,7 +91,7 @@
               <items>
                 <ProgressIndicator fx:id="progressIndicator" maxHeight="15.0" maxWidth="15.0" minHeight="15.0" minWidth="15.0" prefHeight="15.0" prefWidth="15.0" progress="-1.0" />
                 <Circle fill="DODGERBLUE" radius="5.0" stroke="BLACK" strokeType="INSIDE" visible="false" />
-                <Label fx:id="labelStatus" text="Label" visible="false" />
+                <Label fx:id="labelStatus" text="" visible="true" />
               </items>
             </ToolBar>
           </children>
