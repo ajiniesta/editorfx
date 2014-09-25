@@ -8,6 +8,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -26,15 +28,23 @@ public class AceEditor implements Container {
 	public AceEditor(UpdateNotification updateNotification){
 		this.notification = updateNotification;
 		webView = new WebView();
-		initialize(webView);
 		changed = new SimpleBooleanProperty(false);
-		text = new SimpleStringProperty();
+		text = new SimpleStringProperty("");
 		
 		webView.setOnKeyPressed(new EventHandler<Event>() {
 			public void handle(Event arg0) {
 				changed.set(true);
 			}
 		});
+		
+		text.addListener(new ChangeListener<String>() {
+
+			public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
+				// TODO Auto-generated method stub
+				System.out.println(arg1 +" to " + arg2);
+			}
+		});
+		initialize(webView);
 	}
 	
 	private void initialize(WebView webView) {
@@ -64,10 +74,7 @@ public class AceEditor implements Container {
 				+ "</style>"
 				+ "</head>"
 				+ "<body>"
-				+ "<div id=\"editor\">function foo(items) {"
-				+ "    var x = \"All this is syntax highlighted\";"
-				+ "    return x;"
-				+ "}</div>"
+				+ "<div id=\"editor\"> "+text.get()+"</div>"
 				+ "    "
 				+ "<script src=\""+getAceJs()+"\" type=\"text/javascript\" charset=\"utf-8\"></script>"
 				+ "<script>"
