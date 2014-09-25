@@ -81,7 +81,7 @@ public class AceEditor implements Container {
 
 	private String getAceJs() {
 		String js = "com/iniesta/editorfx/editor/ace/js/src-noconflict/ace.js";
-		js = "/home/antonio/dev/github/editorfx/target/classes/com/iniesta/editorfx/editor/ace/js/src-noconflict/ace.js";
+		js = "file:///home/antonio/dev/github/editorfx/target/classes/com/iniesta/editorfx/editor/ace/js/src-noconflict/ace.js";
 		return js;
 	}
 
