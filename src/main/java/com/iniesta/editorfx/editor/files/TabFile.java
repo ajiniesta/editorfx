@@ -29,8 +29,8 @@ import com.iniesta.editorfx.editor.UpdateNotification;
 import com.iniesta.editorfx.editor.files.business.HelperEditorFiles;
 import com.iniesta.editorfx.editor.files.business.ServiceFileSave;
 import com.iniesta.editorfx.editor.files.business.ServiceFileText;
+import com.iniesta.editorfx.editor.files.container.AceEditor;
 import com.iniesta.editorfx.editor.files.container.Container;
-import com.iniesta.editorfx.editor.files.container.TextAreaContainer;
 
 /**
  * @author antonio
@@ -59,12 +59,11 @@ public class TabFile {
 		initialize(tabName, updateNotification);
 	}
 	
-	
-	
 	private void initialize(String tabName,	UpdateNotification updateNotification) {
-		this.tabName = file.getName();
-		this.tab = new Tab(tabName);		
-		this.container = new TextAreaContainer();
+		this.tabName = file!=null?file.getName():"unsaved";
+		this.tab = new Tab(tabName);
+		this.tab.setClosable(true);
+		this.container = new AceEditor(updateNotification);
 		this.tab.setContent(container.getNode());		
 		this.updateNotification = updateNotification;
 		tab.setOnSelectionChanged(new EventHandler<Event>() {			
@@ -72,6 +71,7 @@ public class TabFile {
 				updateNotificationStatus();
 			}
 		});
+		
 	}
 
 	/**

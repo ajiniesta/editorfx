@@ -20,7 +20,7 @@
       <artifactId>javafx</artifactId>
       <version>2.2.3</version>
       <scope>system</scope>
-      <systemPath>${java.home}/lib/jfxrt.jar</systemPath>
+      <systemPath>/usr/lib/jvm/jdk1.7.0_13/jre/lib/jfxrt.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>com.iniesta</groupId>
