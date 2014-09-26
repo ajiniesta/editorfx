@@ -25,11 +25,11 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
 
+import com.iniesta.editorfx.editor.AceEditor;
 import com.iniesta.editorfx.editor.UpdateNotification;
 import com.iniesta.editorfx.editor.files.business.HelperEditorFiles;
 import com.iniesta.editorfx.editor.files.business.ServiceFileSave;
 import com.iniesta.editorfx.editor.files.business.ServiceFileText;
-import com.iniesta.editorfx.editor.files.container.AceEditor;
 import com.iniesta.editorfx.editor.files.container.Container;
 
 /**
@@ -149,7 +149,7 @@ public class TabFile {
 	public void openFile() {
 		//Call the service to fill the text
 		ServiceFileText service = new ServiceFileText(file);
-		updateNotification.getProgressIndicator().visibleProperty().bind(service.runningProperty());
+		updateNotification.bind(service.runningProperty());
 		container.textProperty().bind(service.valueProperty());
 		if(file.canWrite()){
 			SimpleBooleanProperty finish = new SimpleBooleanProperty(true);
@@ -212,7 +212,7 @@ public class TabFile {
 	private void saveFile(final File file) {
 		if(file!=null){
 			final ServiceFileSave service = new ServiceFileSave(file, getContentTabSelected());
-			updateNotification.getProgressIndicator().visibleProperty().bind(service.runningProperty());
+			updateNotification.bind(service.runningProperty());
 			service.start();
 			SimpleBooleanProperty finish = new SimpleBooleanProperty(true);
 			finish.bind(service.runningProperty());

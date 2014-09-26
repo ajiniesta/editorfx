@@ -16,6 +16,9 @@
  */
 package com.iniesta.editorfx.editor;
 
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 
@@ -27,11 +30,19 @@ public class UpdateNotification {
 
 	private ProgressIndicator progressIndicator;
 	private Label labelStatus;
+	
+	private BooleanBinding orBinding = new SimpleBooleanProperty(true).not();
+	
 	/**
 	 * @return the progressIndicator
 	 */
 	public ProgressIndicator getProgressIndicator() {
 		return progressIndicator;
+	}
+	
+	public void bind(ObservableBooleanValue boolProp){
+		orBinding = orBinding.or(boolProp);
+		progressIndicator.visibleProperty().bind(orBinding);
 	}
 	/**
 	 * @param progressIndicator the progressIndicator to set

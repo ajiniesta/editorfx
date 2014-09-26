@@ -1,5 +1,6 @@
 package com.iniesta.editorfx.editor.files.container;
 
+import com.iniesta.editorfx.editor.AceEditor;
 import com.iniesta.editorfx.editor.UpdateNotification;
 
 public class FactoryContainer {

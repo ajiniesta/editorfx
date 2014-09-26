@@ -61,6 +61,8 @@ public class Editor implements Initializable, HandlingView{
 	private Label labelStatus;
 
 	private TabFiles helperFileCreator;
+
+	private UpdateNotification updateNotification;
 	
 	public void initialize(URL arg0, ResourceBundle arg1) {		
 		progressIndicator.setVisible(false);
@@ -69,7 +71,7 @@ public class Editor implements Initializable, HandlingView{
 				return new EditorFileCell();
 			}
 		});
-		UpdateNotification updateNotification = new UpdateNotification();
+		updateNotification = new UpdateNotification();
 		updateNotification.setProgressIndicator(progressIndicator);
 		updateNotification.setLabelStatus(labelStatus);
 		this.helperFileCreator = TabFiles.getInstance(paneFiles, updateNotification);
@@ -93,7 +95,7 @@ public class Editor implements Initializable, HandlingView{
 	void handleMenuLoadFolderAction(ActionEvent event){		
 		File f = HelperEditorFiles.getFolder(stage);		
 		ServiceFolderLoading service = new ServiceFolderLoading(f);
-		progressIndicator.visibleProperty().bind(service.runningProperty());		
+		updateNotification.bind(service.runningProperty());		
 		treeViewFolder.rootProperty().bind(service.valueProperty());
 		service.start();
 	}
